@@ -21,6 +21,21 @@ const startServer = async () => {
     res.json(result);
   });
 
+app.delete("/user/:id", async (req, res) => {
+    const { id } = req.params;
+    const result = await userCollection.deleteOne({ _id: new ObjectId(id) });
+    res.json(result);
+  });
+
+app.patch("/user/:id", async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+    const result = await userCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { role } }
+    );
+    res.json(result);  
+  })
 
 
 
@@ -28,9 +43,6 @@ const startServer = async () => {
 
 
 
-
-
-  
 
   //user
  app.post("/housepost", async (req, res) => {
