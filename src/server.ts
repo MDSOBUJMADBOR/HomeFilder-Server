@@ -22,6 +22,10 @@ console.log(process.env.DATABASE_NAME);
 
 
   
+
+
+  
+  
 app.get("/", (req, res) => {
   res.send("Server is running fine!");
 });
