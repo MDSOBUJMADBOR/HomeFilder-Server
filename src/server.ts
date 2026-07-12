@@ -3,6 +3,7 @@ dotenv.config();
 
 import app from "./app";
 import { connectDB, client } from "./config/db";
+import { ObjectId } from "mongodb";
 
 const PORT = process.env.PORT || 5000;
 
@@ -14,13 +15,24 @@ const startServer = async () => {
   const userCollection = db.collection("user");
     const housepostCollection = db.collection("housepost");
 
-  // GET
-  app.get("/users", async (req, res) => {    
-    const users = await userCollection.find().toArray();
-      console.log(users,'users');
-    res.json(users);
+  // admin
+  app.get("/user", async (req, res) => {    
+    const result = await userCollection.find().toArray();      
+    res.json(result);
   });
 
+
+
+
+
+
+
+
+
+
+  
+
+  //user
  app.post("/housepost", async (req, res) => {
       const requestData = req.body;
       // console.log(requestData);
@@ -28,6 +40,37 @@ const startServer = async () => {
       res.json(result); 
     });  
   
+app.get("/housepost/email/:email", async (req, res) => {
+    const { email } = req.params;
+    const result = await housepostCollection.find({ email }).toArray();
+    res.json(result);
+  });
+
+
+app.delete("/housepost/:id", async (req, res) => {
+    const { id } = req.params;
+    const result = await housepostCollection.deleteOne({ _id: new ObjectId(id) });
+    res.json(result);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   
