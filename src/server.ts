@@ -10,8 +10,9 @@ const startServer = async () => {
   await connectDB();
 
   const db = client.db(process.env.DATABASE_NAME);
-console.log(process.env.DATABASE_NAME);
+
   const userCollection = db.collection("user");
+    const housepostCollection = db.collection("housepost");
 
   // GET
   app.get("/users", async (req, res) => {    
@@ -20,7 +21,12 @@ console.log(process.env.DATABASE_NAME);
     res.json(users);
   });
 
-
+ app.post("/housepost", async (req, res) => {
+      const requestData = req.body;
+      // console.log(requestData);
+      const result = await housepostCollection.insertOne(requestData);      
+      res.json(result); 
+    });  
   
 
 
