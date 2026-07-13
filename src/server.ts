@@ -16,6 +16,11 @@ const startServer = async () => {
     const housepostCollection = db.collection("housepost");
 
   // admin
+app.get("/housepost", async (req, res) => {
+    const result = await housepostCollection.find().toArray();      
+    res.json(result);
+  });
+
   app.get("/user", async (req, res) => {    
     const result = await userCollection.find().toArray();      
     res.json(result);
@@ -38,8 +43,17 @@ app.patch("/user/:id", async (req, res) => {
   })
 
 
+app.patch("/housepost/:id", async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;  
+    const result = await housepostCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { status } }
+    );
+    res.json(result);
+});
 
-
+  
 
 
 
