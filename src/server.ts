@@ -79,10 +79,10 @@ app.delete("/housepost/:id", async (req, res) => {
     res.json(result);
   });
 
-
-
-
-
+app.get("/housepost/published/four", async (req, res) => {
+    const result = await housepostCollection.find({ status: "published" }).limit(4).toArray();
+    res.json(result);
+  });
 
 
 
