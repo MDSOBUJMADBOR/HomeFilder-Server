@@ -84,6 +84,49 @@ app.get("/housepost/published/four", async (req, res) => {
     res.json(result);
   });
 
+app.get("/housepost/published", async (req, res) => {
+  const { page = 1, limit = 8 } = req.query;
+
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
+
+  const skip = (pageNumber - 1) * limitNumber;
+
+  const result = await housepostCollection
+    .find({ status: "published" })
+    .skip(skip)
+    .limit(limitNumber)
+    .toArray();
+
+  const total = await housepostCollection.countDocuments({
+    status: "published",
+  });
+
+  const totalPage = Math.ceil(total / limitNumber);
+
+  console.log({
+    data: result,
+    page: pageNumber,
+    totalPage,
+    total,
+  });
+
+  res.json({
+    total,
+    totalPage,
+    page: pageNumber,
+    limit: limitNumber,
+    data: result,
+  });
+});
+app.get("/housepost/published/:id", async (req, res) => {
+  const id = req.params.id;
+  const result = await housepostCollection.findOne({
+    _id: new ObjectId(id),
+    status: "published",
+  });
+  res.json(result);
+});
 
 
 
