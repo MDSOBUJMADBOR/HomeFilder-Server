@@ -4,16 +4,55 @@ dotenv.config();
 import app from "./app";
 import { connectDB, client } from "./config/db";
 import { ObjectId } from "mongodb";
+const { createRemoteJWKSet, jwtVerify } = require("jose-cjs");
 
 const PORT = process.env.PORT || 5000;
 
+
+const JWKS = createRemoteJWKSet(new URL(`${process.env.CLIENT_URL}/api/auth/jwks`));
+
+const verifyToken = async (req, res, next) => {
+  const authHeader = req?.headers.authorization;
+ 
+  if (!authHeader) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const token = authHeader.split(" ")[1];
+  
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" }); 
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, JWKS);
+    req.user = payload;
+
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Forbidden" }); 
+  }
+};
+
+
+
+
+
+
+
 const startServer = async () => {
+
   await connectDB();
 
-  const db = client.db(process.env.DATABASE_NAME);
+const db = client.db(process.env.DATABASE_NAME);
 
-  const userCollection = db.collection("user");
-    const housepostCollection = db.collection("housepost");
+const userCollection = db.collection("user");
+const housepostCollection = db.collection("housepost");
+const addedfavoritestCollection = db.collection("favorites");
+const contactCollection = db.collection("contact");
+
+
+
+
 
   // admin
 app.get("/housepost", async (req, res) => {
@@ -119,12 +158,27 @@ app.get("/housepost/published", async (req, res) => {
     data: result,
   });
 });
+
 app.get("/housepost/published/:id", async (req, res) => {
   const id = req.params.id;
   const result = await housepostCollection.findOne({
     _id: new ObjectId(id),
     status: "published",
   });
+  res.json(result);
+});
+
+
+
+app.post("/favorites", async (req, res) => {
+  const requestData = req.body;
+  const result = await addedfavoritestCollection.insertOne(requestData);
+  res.json(result);
+})
+
+app.post("/contact", async (req, res) => {
+  const requestData = req.body;
+  const result = await contactCollection.insertOne(requestData);
   res.json(result);
 });
 
