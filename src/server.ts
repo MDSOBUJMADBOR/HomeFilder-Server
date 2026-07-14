@@ -104,6 +104,44 @@ app.patch("/housepost/:id", async (req, res) => {
       const result = await housepostCollection.insertOne(requestData);      
       res.json(result); 
     });  
+
+// app.get("/housepost", async (req, res) => {
+//   try {
+//     const { page = 1, limit = 6 } = req.query;
+
+//     const pageNumber = Number(page);
+//     const limitNumber = Number(limit);
+
+//     const skip = (pageNumber - 1) * limitNumber;
+
+//     const houses = await housepostCollection
+//       .find()
+//       .skip(skip)
+//       .limit(limitNumber)
+//       .toArray();
+
+//     const total = await housepostCollection.countDocuments();
+
+//     const totalPage = Math.ceil(total / limitNumber);
+
+//     res.json({
+//       total,
+//       totalPage,
+//       page: pageNumber,
+//       limit: limitNumber,
+//       data: houses,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: "Failed to fetch houses",
+//       error: error.message,
+//     });
+//   }
+// });
+
+
+
+
   
 app.get("/housepost/email/:email", async (req, res) => {
     const { email } = req.params;
@@ -182,7 +220,22 @@ app.post("/contact", async (req, res) => {
   res.json(result);
 });
 
+app.get("/favorites/email/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
 
+    const result = await addedfavoritestCollection
+      .find({ customerEmail: email })
+      .toArray();
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch favorite properties",
+      error: error.message,
+    });
+  }
+});
 
 
 
