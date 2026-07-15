@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 const JWKS = createRemoteJWKSet(new URL(`${process.env.CLIENT_URL}/api/auth/jwks`));
 
-const verifyToken = async (req, res, next) => {
+const verifyToken = async (req: any, res: any, next: any) => {
   const authHeader = req?.headers.authorization;
  
   if (!authHeader) {
@@ -93,10 +93,6 @@ app.patch("/housepost/:id", async (req, res) => {
 });
 
   
-
-
-
-
   //user
  app.post("/housepost", async (req, res) => {
       const requestData = req.body;
@@ -104,43 +100,6 @@ app.patch("/housepost/:id", async (req, res) => {
       const result = await housepostCollection.insertOne(requestData);      
       res.json(result); 
     });  
-
-// app.get("/housepost", async (req, res) => {
-//   try {
-//     const { page = 1, limit = 6 } = req.query;
-
-//     const pageNumber = Number(page);
-//     const limitNumber = Number(limit);
-
-//     const skip = (pageNumber - 1) * limitNumber;
-
-//     const houses = await housepostCollection
-//       .find()
-//       .skip(skip)
-//       .limit(limitNumber)
-//       .toArray();
-
-//     const total = await housepostCollection.countDocuments();
-
-//     const totalPage = Math.ceil(total / limitNumber);
-
-//     res.json({
-//       total,
-//       totalPage,
-//       page: pageNumber,
-//       limit: limitNumber,
-//       data: houses,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Failed to fetch houses",
-//       error: error.message,
-//     });
-//   }
-// });
-
-
-
 
   
 app.get("/housepost/email/:email", async (req, res) => {
@@ -230,22 +189,12 @@ app.get("/favorites/email/:email", async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch favorite properties",
-      error: error.message,
-    });
-  }
+  res.status(500).json({
+    message: "Failed to fetch favorite properties",
+    error: error instanceof Error ? error.message : "An unknown error occurred",
+  });
+}
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
