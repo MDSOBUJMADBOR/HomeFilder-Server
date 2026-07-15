@@ -1,32 +1,22 @@
+"use strict";
 // import express from "express";
 // import cors from "cors";
 // import { client } from "./config/db";
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // const app = express();
-
 // app.use(cors());
 // app.use(express.json());
-
-
-
 // async function run() {
 //   try {
 //     // Connect the client to the server	(optional starting in v4.7)
 //     await client.connect();
-
 // const db = client.db(process.env.DATABASE_NAME as string); // Database name
 // const userCollection = db.collection("users");
-
-
 // app.get("/users", async (req, res) => {
- 
 //     const result = await userCollection.find().toArray();
 //     console.log(result,'result');
 // res.json(result);
 // })
-
-
-
 //     await client.db("admin").command({ ping: 1 });
 //     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 //   } finally {
@@ -35,25 +25,10 @@
 //   }
 // }
 // run().catch(console.dir);
-
-
-
 // export default app;
-
-
-import express from "express";
-import cors from "cors";
-
-const app = express();
-
-// ✅ FIX: লাইভ ফ্রন্টএন্ডের CORS এবং Credentials পলিসি হ্যান্ডেল করার জন্য কনফিগারেশন
-app.use(cors({
-  origin: 'https://home-filder.vercel.app', // শুধুমাত্র আপনার ফ্রন্টএন্ড ডোমেইন
-  credentials: true, // কুকি/টোকেন পারমিট করার জন্য
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(express.json());
-
-export default app;
+var express_1 = require("express");
+var cors_1 = require("cors");
+var app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+exports.default = app;
